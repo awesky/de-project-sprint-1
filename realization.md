@@ -57,6 +57,9 @@
 В общем и целом установленные ограничения таблицы `orders` схемы `production` удовлетворяют потребностям для построения витрины `dm_rfm_segments`.
 Однако консистентность данных в таблицах `orders` и `orderstatuslog` схемы `production` не обеспечивается должным образом.
 
+-- Все поля используемых таблиц имеют ограничение NOT NULL, т.е. пропусков быть не должно
+-- 
+
 
 ## 1.4. Подготовьте витрину данных
 
@@ -113,9 +116,26 @@ FROM
     LEFT JOIN analysis.tmp_rfm_recency AS recency_data ON users_data.id = recency_data.user_id 
     LEFT JOIN analysis.tmp_rfm_frequency AS frequency_data ON users_data.id = frequency_data.user_id 
     LEFT JOIN analysis.tmp_rfm_monetary_value AS monetary_value_data ON users_data.id = monetary_value_data.user_id;
+```
 
+```SQL
 SELECT * 
 FROM analysis.dm_rfm_segments
 ORDER BY user_id
 LIMIT 10;
+```
+
+```
+user_id|recency|frequency|monetary_value|
+-------+-------+---------+--------------+
+      0|      1|        3|             4|
+      1|      4|        3|             3|
+      2|      2|        3|             5|
+      3|      2|        3|             3|
+      4|      4|        3|             3|
+      5|      5|        5|             5|
+      6|      1|        3|             5|
+      7|      4|        2|             2|
+      8|      1|        1|             3|
+      9|      1|        3|             2|
 ```
